@@ -85,6 +85,7 @@ export async function getStaticProps({ params }) {
 
   try {
     post = await getPost(params.slug)
+
   } catch (err) {
     if (err.status !== 404) {
       throw err
@@ -95,9 +96,11 @@ export async function getStaticProps({ params }) {
   post.summary = `${post.content.substr(0, 100)}`
   post.image = findImageInMarkdown(post.content)
 
+
+
   return {
     props: {
-      post
+      post,
     },
     revalidate: 2
   }
