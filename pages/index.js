@@ -1,39 +1,56 @@
-import Link from 'next/link'
-import Theme from '../components/Theme'
-import ms from 'ms'
-import matter from 'gray-matter'
-import { getPostList, getPageList } from '../lib/data'
+import Link from "next/link";
+import Image from 'next/image'
+import Theme from "../components/Theme";
+import { getPageSections } from "../lib/data";
+import { matter } from "gray-matter";
+import Markdown from "markdown-to-jsx";
+import Youtube from "../components/Youtube"
 
-export default function Home({ postList, pageList }) {
-  console.log("🚀 ~ file: index.js ~ line 7 ~ Home ~ pageList", pageList[0])
+const NextLink = (href, label) => {
+  return (
+    <Link {...href} test="test">
+      <a>{label}</a>
+    </Link>
+  );
+};
+
+const NextImage = (src, alt) => {
+  <Image
+    {...src}
+    {...alt}
+    layout="fill"
+    objectFit="cover"
+    style={{maxHeight: '60vh'}}
+  />
+}
+
+export default function Home({ sections }) {
+  console.log("🚀 ~ file: index.js ~ line 8 ~ Home ~ sections", sections);
   return (
     <Theme>
-      <div className='post-list'>
-        {postList.map((post) => (
-          <div key={post.slug} className='post-link'>
-            <Link href='/post/[slug]' as={`/post/${post.slug}`}>
-              <a>
-                <div className='time'>
-                  {ms(Date.now() - post.createdAt, { long: true })} ago
-                </div>
-                <div className='title'>{post.title}</div>
-              </a>
-            </Link>
-          </div>
-        ))}
+      <div className='content'>
+        <Markdown
+          options={{
+            overrrides: {
+              a: { component: NextLink, props: { passHref: true } },
+              Youtube: { component: Youtube },
+              img: {component: NextImage}
+            },
+          }}
+        >
+          {sections[0].content}
+        </Markdown>
       </div>
     </Theme>
   );
 }
 
-export async function getStaticProps () {
-  const postList = await getPostList()
-  const pageList = await getPageList()
+export async function getStaticProps() {
+  const sections = await getPageSections("home");
 
   return {
     props: {
-      postList,
-      pageList,
+      sections,
     },
     revalidate: 2,
   };

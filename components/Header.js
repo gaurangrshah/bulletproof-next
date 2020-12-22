@@ -17,7 +17,10 @@ export default function Header () {
   return (
     <div className='header'>
       <Link href='/'>
-        <a className='title'>My Blog</a>
+        <a className='title'>Home</a>
+      </Link>
+      <Link href='/posts'>
+        <a className='title'>Posts</a>
       </Link>
       {session && (
         <Link href='/dashboard'>
