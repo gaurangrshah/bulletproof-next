@@ -1,52 +1,84 @@
 import Link from "next/link";
-import Image from 'next/image'
-import Theme from "../components/Theme";
-import { getPageSections } from "../lib/data";
-import { matter } from "gray-matter";
+import NextImage from "next/image";
+import { chakra, Image as ChImage } from "@chakra-ui/react";
 import Markdown from "markdown-to-jsx";
-import Youtube from "../components/Youtube"
 
-const NextLink = (href, label) => {
-  return (
-    <Link {...href} test="test">
-      <a>{label}</a>
-    </Link>
-  );
-};
+import Theme from "../components/Theme";
+import { getPageSections } from "@/lib/data";
+import { FlexContainer } from "@/chakra/components/flex-container";
+import { extractLinks, extractImages } from "@/lib/extract-from-md";
+import { SimpleNextButtonLink } from "@/chakra/components/link/next-chakra-link";
 
-const NextImage = (src, alt) => {
-  <Image
-    {...src}
-    {...alt}
-    layout="fill"
-    objectFit="cover"
-    style={{maxHeight: '60vh'}}
-  />
-}
+const HeroImage = chakra(NextImage);
+const CHMarkdown = chakra(Markdown);
 
 export default function Home({ sections }) {
   console.log("🚀 ~ file: index.js ~ line 8 ~ Home ~ sections", sections);
+
+  sections.map(section => {
+    section.image = extractImages(section.content);
+    return section
+  })
+
+  console.log(sections)
   return (
     <Theme>
       <div className='content'>
-        <Markdown
-          options={{
-            overrrides: {
-              a: { component: NextLink, props: { passHref: true } },
-              Youtube: { component: Youtube },
-              img: {component: NextImage}
-            },
-          }}
-        >
-          {sections[0].content}
-        </Markdown>
+        <FlexContainer
+          minH='50vh'
+          flexDirection={["column", null, "center"]}
+          justifyContent='center'
+          components={[
+            <HeroImage
+              src={sections[0].image}
+              overflow='hidden'
+              layout='fill'
+              mt={6}
+              zIndex={0}
+            />,
+            <CHMarkdown
+              options={{
+                overrides: {
+                  a: { component: SimpleNextButtonLink },
+                },
+              }}
+              zIndex={1}
+              sx={{
+                "& p": {
+                  fontSize: "lg",
+                  fontWeight: 600,
+                  color: "blue.200",
+                },
+                "& h2": {
+                  fontSize: "4xl",
+                  fontWeight: 600,
+                  color: "blue.500",
+                },
+                "& img": {
+                  display: "none",
+                },
+              }}
+            >
+              {sections[0].content}
+            </CHMarkdown>,
+          ]}
+        />
       </div>
     </Theme>
   );
 }
 
 export async function getStaticProps() {
-  const sections = await getPageSections("home");
+  let sections;
+  try {
+     sections = await getPageSections("home")
+  } catch (err) {
+    if(err.status !== 404) {
+      throw err;
+    }
+  }
+
+
 
   return {
     props: {

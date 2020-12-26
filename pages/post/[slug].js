@@ -1,12 +1,14 @@
-import Theme from "../../components/Theme";
-import ms from "ms";
-import Markdown from "markdown-to-jsx";
-import Youtube from "../../components/Youtube";
-import { getPostList, getPost } from "../../lib/data";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Comments from "../../components/Comments";
-import findImageInMarkdown from "../../lib/find-image-in-markdown";
+import ms from "ms";
+import Markdown from "markdown-to-jsx";
+
+import Theme from "@/components/Theme";
+import { getPostList, getPost } from "@/lib/data";
+import { extractImages } from "@/lib/extract-from-md";
+
+import Youtube from "@/components/Youtube";
+import Comments from "@/components/Comments";
 
 export default function Post({ post }) {
   const router = useRouter();
@@ -90,7 +92,7 @@ export async function getStaticProps({ params }) {
 
   post.url = `${process.env.NEXT_PUBLIC_ROOT_URL}/post/${post.slug}`;
   post.summary = `${post.content.substr(0, 100)}`;
-  post.image = findImageInMarkdown(post.content);
+  post.image = extractImages(post.content);
 
   return {
     props: {
