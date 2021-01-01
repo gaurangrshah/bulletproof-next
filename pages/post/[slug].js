@@ -5,7 +5,7 @@ import Markdown from "markdown-to-jsx";
 
 import Theme from "@/components/Theme";
 import { getPostList, getPost } from "@/lib/data";
-import { extractImages } from "@/lib/extract-from-md";
+import { extractImages } from "@/utils/helpers";
 
 import Youtube from "@/components/Youtube";
 import Comments from "@/components/Comments";

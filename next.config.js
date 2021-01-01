@@ -8,6 +8,6 @@ module.exports = {
     ];
   },
   images: {
-    domains: ["images.unsplash.com"],
+    domains: ["cdn.jsdelivr.net", "magdeleine.co", "images.unsplash.com"],
   },
 };

@@ -5,6 +5,7 @@ import { saveUser, getUser } from '../../../lib/data'
 const providers = []
 
 if (process.env.GITHUB_CLIENT_ID) {
+    // save user with github credentials
     providers.push(
         Providers.GitHub({
             clientId: process.env.GITHUB_CLIENT_ID,
@@ -13,22 +14,23 @@ if (process.env.GITHUB_CLIENT_ID) {
     )
 } else {
     providers.push(
-        Providers.Credentials({
-          name: 'local',
-          credentials: {
-            username: {label: 'Username', type: 'text'}
-          },
-    
-          async authorize({ username }) {
-            return {
-              id: username,
-              name: username,
-              email: `${username}@email.com`,
-              image: `https://api.adorable.io/avatars/128/${username}.png`
-            }
-          }
-        })
-      )
+      // save user with local credentials
+      Providers.Credentials({
+        name: "local",
+        credentials: {
+          username: { label: "Username", type: "text" },
+        },
+
+        async authorize({ username }) {
+          return {
+            id: username,
+            name: username,
+            email: `${username}@email.com`,
+            image: `https://api.adorable.io/avatars/128/${username}.png`,
+          };
+        },
+      })
+    );
 }
 
 const callbacks = {}
@@ -42,7 +44,7 @@ callbacks.signIn = async function signIn(user, account, metadata) {
         })
         const emails = await emailRes.json()
         const primaryEmail = emails.find(e => e.primary).email;
-    
+
         const githubUser = {
             id: metadata.id,
             login: metadata.login,
@@ -50,7 +52,7 @@ callbacks.signIn = async function signIn(user, account, metadata) {
             email: primaryEmail,
             avatar: user.image
         }
-    
+
         user.id = await saveUser('github', githubUser)
         return true
     }

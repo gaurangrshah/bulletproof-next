@@ -3,7 +3,7 @@ import { Flex } from "@chakra-ui/react";
 
 export const FlexContainer = ({ components, ...rest }) => {
   return (
-    <Flex {...rest} {...flexWrapper}>
+    <Flex className="flex-container" {...rest} {...flexWrapper}>
       {components.map((Comp, i) => (
         <Flex key={i} flexDirection='column' w='full'>
           {Comp}

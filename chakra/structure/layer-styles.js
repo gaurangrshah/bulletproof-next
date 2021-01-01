@@ -5,6 +5,7 @@ import { main } from './main'
 import { wrapper } from './wrapper'
 import { responsive, fullWidth, flexCenter } from './container';
 import { postLayer } from './markdown'
+import { heroContainer } from './markdown'
 import { row } from './row'
 
 const layerStyles = {
@@ -16,6 +17,7 @@ const layerStyles = {
   responsive,
   fullWidth,
   flexCenter,
+  heroContainer,
   postLayer,
   row
 };

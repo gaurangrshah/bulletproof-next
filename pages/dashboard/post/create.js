@@ -15,7 +15,7 @@ export default function CreatePost({ }) {
   if (loading) {
     return 'loading...'
   }
-  
+
   if (!session) {
     return (
       <Theme>

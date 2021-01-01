@@ -15,13 +15,13 @@ const SEO = {
   url: `${BASE_URL}`,
   canonical: `${BASE_URL}`,
   twitter: {
-    handle: '@handle',
-    site: '@site',
-    cardType: 'summary_large_image'
+    handle: "@handle",
+    site: "@site",
+    cardType: "summary_large_image",
   },
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
+    type: "website",
+    locale: "en_US",
     url: `${BASE_URL}`,
     title,
     description,
@@ -30,10 +30,10 @@ const SEO = {
         url: `${BASE_URL}/static/images/logo.png`,
         alt: title,
         width: 1280,
-        height: 720
-      }
+        height: 720,
+      },
     ],
-    site_name: `${title}`
+    site_name: `${title}`,
   }
 };
 

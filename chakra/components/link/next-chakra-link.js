@@ -1,14 +1,10 @@
 import {
-  Box,
   Button,
   chakra,
-  Flex,
   Link as ChakraLink,
   shouldForwardProp,
 } from "@chakra-ui/react";
 import Link from 'next/link'
-
-import React from 'react'
 
 const NextLink = chakra(Link, {
   shouldForwardProp: (prop) => {
@@ -24,15 +20,14 @@ const NextLink = chakra(Link, {
 export const SimpleNextLink = ({ href, children, rest }) => {
   return (
     <NextLink href={href} passHref>
-      <Box
-        as={ChakraLink}
+      <ChakraLink
         // _hover={{
         //   textDecoration: 'none',
         // }}
         {...rest}
       >
         {children}
-      </Box>
+      </ChakraLink>
     </NextLink>
   )
 }
@@ -40,22 +35,19 @@ export const SimpleNextLink = ({ href, children, rest }) => {
 export const SimpleNextButtonLink = ({
   href,
   children,
-  layout = { maxW: '100px' },
-  rest,
+  ...rest
 }) => {
   return (
-    <Flex {...layout}>
-      <NextLink href={href} passHref>
-        <Button
-          as={ChakraLink}
-          _hover={{
-            textDecoration: 'none',
-          }}
-          {...rest}
-        >
-          {children}
-        </Button>
-      </NextLink>
-    </Flex>
+    <NextLink href={href} passHref>
+      <ChakraLink
+        as={Button}
+        _hover={{
+          textDecoration: 'none',
+        }}
+        {...rest}
+      >
+        {children}
+      </ChakraLink>
+    </NextLink>
   )
 }

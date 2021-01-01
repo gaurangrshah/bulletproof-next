@@ -1,88 +1,74 @@
-import Link from "next/link";
-import NextImage from "next/image";
-import { chakra, Image as ChImage } from "@chakra-ui/react";
-import Markdown from "markdown-to-jsx";
+import {
+  Box,
+  Container,
+  Image,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
-import Theme from "../components/Theme";
-import { getPageSections } from "@/lib/data";
-import { FlexContainer } from "@/chakra/components/flex-container";
-import { extractLinks, extractImages } from "@/lib/extract-from-md";
-import { SimpleNextButtonLink } from "@/chakra/components/link/next-chakra-link";
 
-const HeroImage = chakra(NextImage);
-const CHMarkdown = chakra(Markdown);
+import { getAllSections } from '@/lib/data';
+import WaveDiv from "@/components/shapes/waves-div";
+import MarkdownJSX from "@/chakra/components/markdown-jsx";
+import { Hero } from "@/chakra/components/hero";
+
 
 export default function Home({ sections }) {
-  console.log("🚀 ~ file: index.js ~ line 8 ~ Home ~ sections", sections);
-
-  sections.map(section => {
-    section.image = extractImages(section.content);
-    return section
-  })
-
-  console.log(sections)
+  console.log("🚀 ~ file: index.js ~ line 10 ~ Home ~ sections", sections);
   return (
-    <Theme>
-      <div className='content'>
-        <FlexContainer
-          minH='50vh'
-          flexDirection={["column", null, "center"]}
-          justifyContent='center'
-          components={[
-            <HeroImage
-              src={sections[0].image}
-              overflow='hidden'
-              layout='fill'
-              mt={6}
-              zIndex={0}
-            />,
-            <CHMarkdown
-              options={{
-                overrides: {
-                  a: { component: SimpleNextButtonLink },
-                },
-              }}
-              zIndex={1}
-              sx={{
-                "& p": {
-                  fontSize: "lg",
-                  fontWeight: 600,
-                  color: "blue.200",
-                },
-                "& h2": {
-                  fontSize: "4xl",
-                  fontWeight: 600,
-                  color: "blue.500",
-                },
-                "& img": {
-                  display: "none",
-                },
-              }}
-            >
-              {sections[0].content}
-            </CHMarkdown>,
-          ]}
-        />
-      </div>
-    </Theme>
+    <Box className='content'>
+      <Hero bgimg={sections[0].image} zIndex={3}>
+        <MarkdownJSX pt={12} textAlign='left' section={sections[0].content} />
+      </Hero>
+      <WaveDiv color='white' />
+      <Container layerStyle='flexCenter' py={12} className='container'>
+        <MarkdownJSX textAlign='center' section={sections[1].content} />
+      </Container>
+      <Container layerStyle='responsive' mb={24}>
+        <Stack
+          direction={["column", "row"]}
+          spacing={["64px", "24px"]}
+          mx='auto'
+        >
+          {sections[2].map((section) => (
+            <Box key={section.data.title} shadow='default' borderRadius='5px'>
+              <Image
+                src={section.image}
+                alt='Illustration by Freepik Storyset'
+                boxSize='100'
+              />
+              <MarkdownJSX
+                px={6}
+                pb={6}
+                textAlign='left'
+                section={section.content}
+                overrides={{
+                  p: (props) => (
+                    <Text textStyle='mdptrunc' noOfLines={3} {...props} />
+                  ),
+                }}
+              />
+            </Box>
+          ))}
+        </Stack>
+      </Container>
+    </Box>
   );
 }
 
 export async function getStaticProps() {
   let sections;
   try {
-     sections = await getPageSections("home")
+    sections = await getAllSections("home");
   } catch (err) {
-    if(err.status !== 404) {
+    if (err.status !== 404) {
       throw err;
     }
   }
 
-
-
   return {
     props: {
-      sections,
+      sections
     },
     revalidate: 2,
   };
